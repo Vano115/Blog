@@ -1,0 +1,161 @@
+﻿.header {
+    width: 100%;
+    max-width: 1400px;
+    margin-top: 0px;
+    margin-right: auto;
+    margin-bottom: 0px;
+    margin-left: auto;
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 40px
+}
+
+    div {
+        display: block;
+        unicode-bidi: isolate;
+    }
+
+.nav-menu {
+    box-sizing: border-box;
+    position: relative;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    background-image: linear-gradient(rgb(255, 255, 255) 0%, rgb(255, 255, 255) 100%);
+    background-color: rgba(0, 0, 0, 0);
+    display: block;
+    position: static;
+    display: flex;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    background-size: auto;
+    background-image: none;
+    background-repeat: repeat;
+    background-position: left 0px top 0px;
+    background-attachment: scroll;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-style: solid;
+    border-left-style: solid;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-top-color: rgba(255, 255, 255, 1);
+    border-left-color: rgba(255, 255, 255, 1);
+    border-right-color: rgba(255, 255, 255, 1);
+    border-bottom-color: rgba(255, 255, 255, 1);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: rgb(0, 0, 0);
+}
+
+.img-menu {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-clip-margin: content-box;
+    overflow: clip;
+    display: inline-flex cursor: pointer;
+    text-decoration-line: none;
+}
+
+.img-a-menu {
+    color: rgb(0 0 238);
+}
+
+.button-menu {
+    background-size: auto;
+    background-image: none;
+    background-repeat: repeat;
+    background-position: left 0px top 0px;
+    background-attachment: scroll;
+    background-color: rgb(255, 255, 255);
+    transition-property: all;
+    transition-duration: 300ms;
+    transition-delay: 0ms;
+    transition-timing-function: ease;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    color: rgba(0, 0, 0, 1);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    font-family: Open Sans;
+    font-size: 14px;
+    letter-spacing: -0.02em;
+    line-height: 140%;
+    font-weight: 700;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    vertical-align: top;
+    padding-right: 18px;
+    padding-left: 18px;
+    position: relative;
+    text-decoration-line: none;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 0px;
+    border-left-width: 0px;
+    border-top-style: none;
+    border-right-style: none;
+    border-bottom-style: none;
+    border-left-style: none;
+    box-sizing: border-box;
+}
+
+.text-button-menu {
+    cursor: pointer;
+    position: relative;
+    display: inline-flex;
+    vertical-align: top;
+    flex-grow: 1;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    box-sizing: border-box;
+    font-family: arial;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 140%;
+    color: rgba(255, 255, 255, 1);
+    transition-property: all;
+    transition-duration: 300ms;
+    transition-delay: 0ms;
+    transition-timing-function: ease;
+    display: flex;
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    min-height: 35px;
+    text-decoration-line: none;
+    align-items: center;
+    cursor: pointer;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: white;
+    overflow-anchor: none;
+    overflow-wrap: break-word;
+}
