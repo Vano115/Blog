@@ -1,10 +1,51 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Blog.Data.Entityes;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace Blog.Controllers
 {
     public class UserController : Controller
     {
+        public async Task RegisterUser(string email, string password)
+        {
+            // 1. Create the Domain Event
+            var user = new User(email, password);
+            var domainEvent = new UserRegisteredEvent(user.Id, user.Email);
+
+            // 2. Open a Transaction
+            using var transaction = dbContext.Database.BeginTransaction();
+
+            try
+            {
+                // 3. Save the User to the Users Table
+                dbContext.Users.Add(user);
+
+                // 4. Serialize the Event and Save to Outbox Table
+                var outboxMessage = new OutboxMessage
+                {
+                    Id = Guid.NewGuid(),
+                    Type = nameof(UserRegisteredEvent),
+                    Content = JsonSerializer.Serialize(domainEvent),
+                    OccurredOn = DateTime.UtcNow,
+                    ProcessedOn = null // Null means it hasn't been handled yet
+                };
+
+                dbContext.OutboxMessages.Add(outboxMessage);
+
+                // 5. Commit BOTH changes atomically
+                await dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+
         // GET: UserController
         public ActionResult Index()
         {

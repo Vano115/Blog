@@ -1,4 +1,5 @@
-﻿using Blog.Data.Entityes;
+﻿using Blog.Data.Models.UserModels;
+using Blog.Data.Entityes;
 
 namespace Blog.Models.UserModels
 {
@@ -10,7 +11,7 @@ namespace Blog.Models.UserModels
         /// <param name="user">Текущий пользователь</param>
         /// <param name="usereditvm">Модель со страницы</param>
         /// <returns></returns>
-        public static User ConvertToUser(this User user, User model)
+        public static User ConvertToUser(this User user, RegisterViewModel model)
         {
             user.Email = model.Email;
             user.UserName = model.UserName;

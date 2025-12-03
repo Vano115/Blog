@@ -1,6 +1,6 @@
 ﻿using Blog.Data.Entityes;
 
-namespace Blog.Models.BlogModels
+namespace Blog.Data.Models.BlogModels
 {
     public class UserPageViewModel
     {

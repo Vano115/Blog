@@ -1,4 +1,4 @@
-﻿namespace Blog.Models.UserModels
+﻿namespace Blog.Data.Models.UserModels
 {
     public class AutorizeViewModel
     {

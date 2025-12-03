@@ -14,18 +14,20 @@
     <link rel="stylesheet" type="text/css" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="~/Blog.styles.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="~/css/header.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/body.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/footer.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <div class="header">
-            <div class="img-menu">
-                <img src="~/pictures/Logo.png"/>
-            </div>
-            <div class="nav-menu">
+    <header class="header">
+        <div class="header-container">
+            <a class="img-menu" asp-area="" asp-controller="Home" asp-action="Index">
+                <img class="img-menu-logo" src="~/pictures/Logotype.png" />
+            </a>
+            <div class="button-menu">
                 <a class="text-button-menu" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
             </div>
             <div class="button-menu">
-
+                <a class="text-button-menu" asp-area="" asp-controller="Home" asp-action="Index">Выход</a>
             </div>
         </div>
     </header>
@@ -35,7 +37,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer">
         <div class="container">
             &copy; 2025 - Blog - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
