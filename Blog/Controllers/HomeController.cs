@@ -25,6 +25,7 @@ namespace Blog.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [Route("/")]
         [Route("Index")]
         public async Task<IActionResult> Index()
         {

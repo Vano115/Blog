@@ -8,6 +8,7 @@ namespace Blog.Controllers
 {
     public class UserController : Controller
     {
+        /*
         public async Task RegisterUser(string email, string password)
         {
             // 1. Create the Domain Event
@@ -44,7 +45,7 @@ namespace Blog.Controllers
                 throw;
             }
         }
-
+        */
 
         // GET: UserController
         public ActionResult Index()
