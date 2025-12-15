@@ -7,6 +7,8 @@ using Blog.Data.DbSettings;
 using Blog.Data.Entityes;
 using Blog.Data.UoW;
 using Blog.Data.Repository;
+using Blog.Service.Tasks.AccountManager;
+using Blog.Controllers;
 
 namespace Blog
 {
@@ -30,13 +32,14 @@ namespace Blog
         {
             loggerFactory.CreateLogger<Startup>();
             //loggerFactory.CreateLogger<RegisterController>();
-            //loggerFactory.CreateLogger<AccountManagerController>();
+            loggerFactory.CreateLogger<AccountManagerController>();
+            loggerFactory.CreateLogger<Register>();
 
             string connection = Configuration.GetConnectionString("DefaultConnection") ??
                 throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
             services
-                .AddDbContext<ApplicationContext>(options => options.UseNpgsql(connection))
+                .AddDbContextFactory<ApplicationContext>(options => options.UseNpgsql(connection))
                 .AddIdentity<User, IdentityRole>(opts =>
                 {
                     opts.Password.RequiredLength = 8;
@@ -45,12 +48,14 @@ namespace Blog
                     opts.Password.RequireUppercase = true;
                     opts.Password.RequireDigit = false;
                 })
-                .AddEntityFrameworkStores<ApplicationContext>();
+                .AddEntityFrameworkStores<ApplicationContext>()
+                .AddTokenProvider<DataProtectorTokenProvider<User>>(TokenOptions.DefaultProvider);
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IRepository<Article>, ArticleRepository>();
             services.AddScoped<IRepository<Comment>, CommentRepository>();
             services.AddScoped<IRepository<Tag>, TagRepository>();
+            //services.AddTransient<Register>();
 
             services.AddControllersWithViews();
         }
@@ -69,6 +74,7 @@ namespace Blog
 
             app.UseRouting();
             app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             // Сопоставляем маршруты с контроллерами

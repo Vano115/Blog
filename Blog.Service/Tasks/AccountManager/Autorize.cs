@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Blog.Service.Checkers
+namespace Blog.Service.Tasks.AccountManager
 {
-    public class UserChecker
+    internal class Autorize
     {
     }
 }

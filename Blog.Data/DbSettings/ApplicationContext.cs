@@ -21,7 +21,7 @@ namespace Blog.Data.DbSettings
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
-            Database.Migrate();
+            //Database.Migrate();
             //Database.EnsureCreated();
         }
 

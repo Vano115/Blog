@@ -9,7 +9,7 @@ namespace Blog.Models.UserModels
         /// Конвертация данных модели в сущность пользователя
         /// </summary>
         /// <param name="user">Текущий пользователь</param>
-        /// <param name="usereditvm">Модель со страницы</param>
+        /// <param name="model">Модель со страницы</param>
         /// <returns></returns>
         public static User ConvertToUser(this User user, RegisterViewModel model)
         {
