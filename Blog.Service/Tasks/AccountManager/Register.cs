@@ -29,10 +29,18 @@ namespace Blog.Service.Tasks.AccountManager
             _logger = logger;
         }
 
+        /// <summary>
+        /// Регистрация пользователя
+        /// </summary>
+        /// <param name="model"> Модель заполненная пользователем</param>
+        /// <returns> Зарегистрированый пользователь</returns>
+        /// <exception cref="UserNotFoundException"> Ошибка проверки записи пользователя в БД</exception>
+        /// <exception cref="UserNotCreatedException"> Ошибка записи пользователя в БД</exception>
         public async Task<User> RegisterTask(RegisterViewModel model)
         {
             AccountManagerChecker checker = new AccountManagerChecker(_userManager);
 
+            // Валидация данных
             await checker.CheckModel(model);
 
             User user = new User()
@@ -41,8 +49,10 @@ namespace Blog.Service.Tasks.AccountManager
                 Email = model.Email,
             };
 
+            // Запись пользователя в БД
             var result = await _userManager.CreateAsync(user, model.Password);
 
+            // Проверка
             if (result.Succeeded)
             {
                 return await _userManager.FindByIdAsync(user.Id)
@@ -51,6 +61,23 @@ namespace Blog.Service.Tasks.AccountManager
             }
 
             throw new UserNotCreatedException(result.Errors);
+        }
+
+        /// <summary>
+        /// Задача для отправки письма для подтверждения эл.почты
+        /// </summary>
+        /// <param name="Email">Почта пользователя</param>
+        /// <param name="callBackUrl">Адресная страница для подтверждения</param>
+        /// <returns></returns>
+        public async Task<bool> ConfirmEmailTask(string Email, string callBackUrl)
+        {
+            EmailService emailService = new EmailService();
+
+            await emailService.SendConfirmEmailAsync(Email, "Confirm your account",
+                $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callBackUrl}'>link</a>");
+
+            // Заглушка! Доработать!
+            return true;
         }
     }
 }

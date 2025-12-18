@@ -35,61 +35,16 @@ namespace Blog.Controllers
             _dbContextFactory = context;
         }
 
+        /// <summary>
+        /// Регистрация пользователя
+        /// </summary>
+        /// <param name="model"> Модель заполненная пользователем на сайте</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         [HttpPost]
         [Route("Register")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
-        {
-            if (ModelState.IsValid) 
-            {
-                try
-                {
-                    var registrator = new Register(_userManager, _dbContextFactory, _registerLogger);
-
-                    var result = await registrator.RegisterTask(model);
-
-                    if (result != null)
-                    {
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(result);
-
-                        var callbackUrl = Url.Action(
-                            "ConfirmEmail",
-                            "AccountManager",
-                            new { userId = result.Id, code = code },
-                            protocol: HttpContext.Request.Scheme);
-
-                        EmailService emailService = new EmailService();
-
-                        await emailService.SendEmailAsync(model.Email, "Confirm your account",
-                            $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
-
-                        return Content("Для завершения регистрации проверьте электронную почту и перейдите по ссылке, указанной в письме");
-
-                    }
-                }
-                catch (WrongValueException ex)
-                {
-                    ModelState.AddModelError(string.Empty, ex.Message);
-                    _logger.LogInformation($"Пользователь {model.UserName} незарегистрирован: " + ex.Message);
-                    return View(model);
-                }
-                catch(UserNotCreatedException ex)
-                {
-                    _logger.LogError(ex.Errors.First().Description);
-                    ModelState.AddModelError("401", ex.Errors.First().Description);
-                    return View(model);
-                }
-
-                return View(model);
-            }
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [Route("Autorize")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Autorize(AutorizeViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -107,31 +62,37 @@ namespace Blog.Controllers
                             "ConfirmEmail",
                             "AccountManager",
                             new { userId = result.Id, code = code },
-                            protocol: HttpContext.Request.Scheme);
+                            protocol: HttpContext.Request.Scheme)??
+                            throw new Exception("Ошибка генерации URL для подтверждения почты");
 
-                        EmailService emailService = new EmailService();
+                        var confirmEmailSendResult = await registrator.ConfirmEmailTask(model.Email, callbackUrl);
 
-                        await emailService.SendEmailAsync(model.Email, "Confirm your account",
-                            $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
-
-                        return Content("Для завершения регистрации проверьте электронную почту и перейдите по ссылке, указанной в письме");
-
+                        if (confirmEmailSendResult)
+                        {
+                            return Content("Для завершения регистрации проверьте электронную почту и " +
+                                "перейдите по ссылке, указанной в письме");
+                        }
                     }
                 }
                 catch (WrongValueException ex)
                 {
-                    ModelState.AddModelError(string.Empty, ex.Message);
+                    // Доработать! Уточнить код ошибки
+                    ModelState.AddModelError("401", ex.Message);
                     _logger.LogInformation($"Пользователь {model.UserName} незарегистрирован: " + ex.Message);
                     return View(model);
                 }
                 catch (UserNotCreatedException ex)
                 {
                     _logger.LogError(ex.Errors.First().Description);
-                    ModelState.AddModelError("401", ex.Errors.First().Description);
+                    foreach (var error in ex.Errors)
+                    {
+                        // Доработать! Уточнить код ошибки
+                        ModelState.AddModelError("401", error.Description);
+                    }
                     return View(model);
                 }
 
-                return View(model);
+                return View("Home/Index");
             }
 
             return View(model);
@@ -141,6 +102,7 @@ namespace Blog.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
+
             if (userId == null || code == null)
             {
                 return View("Error");
@@ -161,4 +123,56 @@ namespace Blog.Controllers
                 return View("Error");
         }
     }
+    /*
+    [HttpPost]
+    [Route("Autorize")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Autorize(AutorizeViewModel model)
+    {
+
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                var registrator = new Register(_userManager, _dbContextFactory, _registerLogger);
+
+                var result = await registrator.RegisterTask(model);
+
+                if (result != null)
+                {
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(result);
+
+                    var callbackUrl = Url.Action(
+                        "ConfirmEmail",
+                        "AccountManager",
+                        new { userId = result.Id, code = code },
+                        protocol: HttpContext.Request.Scheme);
+
+                    EmailService emailService = new EmailService();
+
+                    await emailService.SendEmailAsync(model.Email, "Confirm your account",
+                        $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
+
+                    return Content("Для завершения регистрации проверьте электронную почту и перейдите по ссылке, указанной в письме");
+
+                }
+            }
+            catch (WrongValueException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                _logger.LogInformation($"Пользователь {model.UserName} незарегистрирован: " + ex.Message);
+                return View(model);
+            }
+            catch (UserNotCreatedException ex)
+            {
+                _logger.LogError(ex.Errors.First().Description);
+                ModelState.AddModelError("401", ex.Errors.First().Description);
+                return View(model);
+            }
+
+            return View(model);
+        }
+
+        return View(model);
+    }*/
 }

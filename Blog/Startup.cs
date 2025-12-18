@@ -31,7 +31,6 @@ namespace Blog
         public void ConfigureServices(IServiceCollection services)
         {
             loggerFactory.CreateLogger<Startup>();
-            //loggerFactory.CreateLogger<RegisterController>();
             loggerFactory.CreateLogger<AccountManagerController>();
             loggerFactory.CreateLogger<Register>();
 
