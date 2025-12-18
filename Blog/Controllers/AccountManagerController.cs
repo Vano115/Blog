@@ -17,22 +17,22 @@ namespace Blog.Controllers
     public class AccountManagerController : Controller
     {
         private readonly ILogger<AccountManagerController> _logger;
-        private readonly ILogger<Register> _registerLogger;
+        private readonly ILoggerFactory _loggerFactory;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDbContextFactory<ApplicationContext> _dbContextFactory;
 
-        public AccountManagerController(ILogger<AccountManagerController> logger, UserManager<User> userManager,
-            SignInManager<User> signInManager, IUnitOfWork unitOfWork, IDbContextFactory<ApplicationContext> context,
-            ILogger<Register> registerLogger)
+        public AccountManagerController(ILoggerFactory loggerFactory, UserManager<User> userManager,
+            SignInManager<User> signInManager, IUnitOfWork unitOfWork, IDbContextFactory<ApplicationContext> context)
         {
-            _logger = logger;
-            _registerLogger = registerLogger;
+            _logger = loggerFactory.CreateLogger<AccountManagerController>();
+            _loggerFactory = loggerFactory;
             _userManager = userManager;
             _signInManager = signInManager;
             _unitOfWork = unitOfWork;
             _dbContextFactory = context;
+
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Blog.Controllers
             {
                 try
                 {
-                    var registrator = new Register(_userManager, _dbContextFactory, _registerLogger);
+                    var registrator = new Register(_userManager, _dbContextFactory, _loggerFactory);
 
                     var result = await registrator.RegisterTask(model);
 
@@ -62,7 +62,7 @@ namespace Blog.Controllers
                             "ConfirmEmail",
                             "AccountManager",
                             new { userId = result.Id, code = code },
-                            protocol: HttpContext.Request.Scheme)??
+                            protocol: HttpContext.Request.Scheme) ??
                             throw new Exception("Ошибка генерации URL для подтверждения почты");
 
                         var confirmEmailSendResult = await registrator.ConfirmEmailTask(model.Email, callbackUrl);
@@ -92,11 +92,12 @@ namespace Blog.Controllers
                     return View(model);
                 }
 
-                return View("Home/Index");
+                return RedirectToAction("Index","Home");
             }
 
             return View(model);
         }
+
 
         [HttpGet]
         [AllowAnonymous]
@@ -122,57 +123,43 @@ namespace Blog.Controllers
             else
                 return View("Error");
         }
-    }
-    /*
-    [HttpPost]
-    [Route("Autorize")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Autorize(AutorizeViewModel model)
-    {
 
-        if (ModelState.IsValid)
+        [HttpPost]
+        [Route("Login")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(AutorizeViewModel model)
         {
-            try
+
+            if (ModelState.IsValid)
             {
-                var registrator = new Register(_userManager, _dbContextFactory, _registerLogger);
+                var result = await _signInManager.PasswordSignInAsync
+                    (model.UserName,
+                    model.Password,
+                    model.RememberMe,
+                    false);
 
-                var result = await registrator.RegisterTask(model);
-
-                if (result != null)
+                if (result.Succeeded)
                 {
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(result);
-
-                    var callbackUrl = Url.Action(
-                        "ConfirmEmail",
-                        "AccountManager",
-                        new { userId = result.Id, code = code },
-                        protocol: HttpContext.Request.Scheme);
-
-                    EmailService emailService = new EmailService();
-
-                    await emailService.SendEmailAsync(model.Email, "Confirm your account",
-                        $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
-
-                    return Content("Для завершения регистрации проверьте электронную почту и перейдите по ссылке, указанной в письме");
-
+                    return RedirectToAction("Index", "Home");
                 }
-            }
-            catch (WrongValueException ex)
-            {
-                ModelState.AddModelError(string.Empty, ex.Message);
-                _logger.LogInformation($"Пользователь {model.UserName} незарегистрирован: " + ex.Message);
-                return View(model);
-            }
-            catch (UserNotCreatedException ex)
-            {
-                _logger.LogError(ex.Errors.First().Description);
-                ModelState.AddModelError("401", ex.Errors.First().Description);
-                return View(model);
             }
 
             return View(model);
         }
 
-        return View(model);
-    }*/
+        /// <summary>
+        /// Выход из аккаунта
+        /// </summary>
+        /// <returns> Возвращает пользователя на главную страницу</returns>
+        [Route("Logout")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            _logger.LogInformation("Выход пользователя");
+            return RedirectToAction("Index", "Home");
+        }
+
+    }
 }

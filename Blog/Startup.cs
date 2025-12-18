@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Blog.Data.DbSettings;
 using Blog.Data.Entityes;
 using Blog.Data.UoW;
@@ -30,9 +31,6 @@ namespace Blog
         public Startup() { }
         public void ConfigureServices(IServiceCollection services)
         {
-            loggerFactory.CreateLogger<Startup>();
-            loggerFactory.CreateLogger<AccountManagerController>();
-            loggerFactory.CreateLogger<Register>();
 
             string connection = Configuration.GetConnectionString("DefaultConnection") ??
                 throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -54,7 +52,10 @@ namespace Blog
             services.AddScoped<IRepository<Article>, ArticleRepository>();
             services.AddScoped<IRepository<Comment>, CommentRepository>();
             services.AddScoped<IRepository<Tag>, TagRepository>();
-            //services.AddTransient<Register>();
+
+            services.AddAuthentication();/* JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,
+                options => Configuration.Bind("JwtSettings", options));*/
 
             services.AddControllersWithViews();
         }
