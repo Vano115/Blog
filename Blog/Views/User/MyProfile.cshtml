@@ -1,5 +1,17 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Blog.Data.Models.UserModels.UserProfileViewModel
 @{
+    ViewData["Title"] = "Blog " + Model.UserName;
 }
+
+<h2>Профиль</h2>
+<div>
+    <span>@Model.UserName</span>
+    @foreach (var i in Model.Articles)
+    {
+        <span>@i.Title</span>
+    }
+</div>
+
+<div>
+    <a class="" asp-area="" asp-controller="Blog" asp-action="WriteArticleView">Создать статью</a>
+</div>

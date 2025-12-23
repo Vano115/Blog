@@ -10,7 +10,7 @@ namespace Blog.Data.Entityes
     {
         public int Id { get; set; } = 0;
 
-        public required string Name { get; set; }
+        public required string Name { get; set; } = "default";
 
         public List<Article> Articles { get; } = [];
     }

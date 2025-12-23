@@ -18,14 +18,19 @@ namespace Blog.Data.Repository
             _context = db;
         }
 
-        public async Task<List<Tag>> GetTags (Article article)
-        {
-            return await _context.Tags.Where(a => a.Articles.Contains(article)).ToListAsync();
-        }
-
         public async Task<List<Article>> GetUserArticles(User user)
         {
             return await _context.Articles.Where(a => a.Owner == user).ToListAsync();
+        }
+
+        public async Task<List<Article>> GetArticlesByTitle(string title)
+        {
+            return await _context.Articles.Where(a => a.Title == title).ToListAsync();
+        }
+
+        public async Task<List<Article>> GetArticlesByTag(Tag tag)
+        {
+            return await _context.Articles.Where(t => t.Tags.Contains(tag)).ToListAsync();
         }
     }
 }

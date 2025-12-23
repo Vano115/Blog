@@ -21,17 +21,15 @@ namespace Blog.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IDbContextFactory<ApplicationContext> _dbContextFactory;
 
         public AccountManagerController(ILoggerFactory loggerFactory, UserManager<User> userManager,
-            SignInManager<User> signInManager, IUnitOfWork unitOfWork, IDbContextFactory<ApplicationContext> context)
+            SignInManager<User> signInManager, IUnitOfWork unitOfWork)
         {
             _logger = loggerFactory.CreateLogger<AccountManagerController>();
             _loggerFactory = loggerFactory;
             _userManager = userManager;
             _signInManager = signInManager;
             _unitOfWork = unitOfWork;
-            _dbContextFactory = context;
 
         }
 
@@ -50,7 +48,7 @@ namespace Blog.Controllers
             {
                 try
                 {
-                    var registrator = new Register(_userManager, _dbContextFactory, _loggerFactory);
+                    var registrator = new Register(_userManager, _loggerFactory);
 
                     var result = await registrator.RegisterTask(model);
 

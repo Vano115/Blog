@@ -17,15 +17,12 @@ namespace Blog.Service.Tasks.AccountManager
     public class Register
     {
         private readonly UserManager<User> _userManager;
-        private readonly IDbContextFactory<ApplicationContext> _dbContextFactory;
         private readonly ILogger<Register> _logger;
 
-        public Register(UserManager<User> userManager, 
-            IDbContextFactory<ApplicationContext> context,
+        public Register(UserManager<User> userManager,
             ILoggerFactory loggerFactory) 
         {
             _userManager = userManager;
-            _dbContextFactory = context;
             _logger = loggerFactory.CreateLogger<Register>();
         }
 
@@ -58,6 +55,7 @@ namespace Blog.Service.Tasks.AccountManager
                 var addRole = await _userManager.FindByIdAsync(user.Id)
                     ?? throw new UserNotFoundException($"Ошибка поиска только что созданного пользователя {user.UserName}");
 
+                // Доделать! Роли
                 await _userManager.AddToRoleAsync(addRole, "Guest");
 
                 return addRole;

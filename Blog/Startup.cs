@@ -36,7 +36,7 @@ namespace Blog
                 throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
             services
-                .AddDbContextFactory<ApplicationContext>(options => options.UseNpgsql(connection))
+                .AddDbContext<ApplicationContext>(options => options.UseNpgsql(connection))
                 .AddIdentity<User, IdentityRole>(opts =>
                 {
                     opts.Password.RequiredLength = 8;

@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Blog.Service.Exceptions.AccountManager
 {
-    public class UserNotFoundException : Exception
+    public class ArticleNotFoundException : Exception
     {
-        public UserNotFoundException(string message) : base(message) { }
+        public ArticleNotFoundException(string message) : base(message) { }
     }
 }
