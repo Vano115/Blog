@@ -21,16 +21,17 @@ namespace Blog.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IUnitOfWork _unitOfWork;
+        //private readonly RoleManager<IdentityRole> _roleManager;
 
         public AccountManagerController(ILoggerFactory loggerFactory, UserManager<User> userManager,
-            SignInManager<User> signInManager, IUnitOfWork unitOfWork)
+            SignInManager<User> signInManager, IUnitOfWork unitOfWork)//, RoleManager<IdentityRole> roleManager)
         {
             _logger = loggerFactory.CreateLogger<AccountManagerController>();
             _loggerFactory = loggerFactory;
             _userManager = userManager;
             _signInManager = signInManager;
             _unitOfWork = unitOfWork;
-
+            //_roleManager = roleManager;
         }
 
         /// <summary>
@@ -87,7 +88,7 @@ namespace Blog.Controllers
                         // Доработать! Уточнить код ошибки
                         ModelState.AddModelError("401", error.Description);
                     }
-                    return View(model);
+                    return BadRequest();
                 }
 
                 return RedirectToAction("Index","Home");
@@ -142,7 +143,7 @@ namespace Blog.Controllers
                 }
             }
 
-            return View(model);
+            return BadRequest("Неверная пара логин-пароль");
         }
 
         /// <summary>

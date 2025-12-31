@@ -16,28 +16,28 @@
     <link rel="stylesheet" type="text/css" href="~/css/header.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="~/css/body.css" asp-append-version="true" />
     <link rel="stylesheet" type="text/css" href="~/css/footer.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/myProfileRules.css" asp-append-version="true" />
 </head>
+
 <body>
     <header class="header">
         <div class="header-container">
             <a class="img-menu" asp-area="" asp-controller="Home" asp-action="Index">
                 <img class="img-menu-logo" src="~/pictures/Logotype.png" />
             </a>
-            <div class="button-menu">
-                <a class="text-button-menu" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-            </div>
             @if (SignInManager.IsSignedIn(User))
             {
-                <a class="text-button-menu" asp-area="" asp-controller="User" asp-action="MyProfile">zfdh</a>
-            
-;
-                        @using (Html.BeginForm("Logout", "AccountManager", FormMethod.Post))
-                        {
-                            @Html.AntiForgeryToken()
-                            <button type="submit" class="text-button-menu">Выйти</button>
-                        };
+                <a class="text-button-menu" asp-area="" asp-controller="User" asp-action="MyProfile">Профиль</a>
+
+                ;
+                @using (Html.BeginForm("Logout", "AccountManager", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="text-button-menu">Выйти</button>
+                }
+                        ;
             }
-            
+
         </div>
     </header>
     <div class="container">

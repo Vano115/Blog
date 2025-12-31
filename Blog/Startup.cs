@@ -47,6 +47,7 @@ namespace Blog
                 })
                 .AddEntityFrameworkStores<ApplicationContext>()
                 .AddTokenProvider<DataProtectorTokenProvider<User>>(TokenOptions.DefaultProvider);
+                //.AddRoles<IdentityRole>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IRepository<Article>, ArticleRepository>();

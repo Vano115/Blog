@@ -2,16 +2,23 @@
 @{
     ViewData["Title"] = "Blog " + Model.UserName;
 }
+<div class="profile-body-block">
+    <div class="profile-title">
+        <img class="circular-image" src="@(Model.ProfileImage ?? "https://via.placeholder.com/180")" alt="Фото пользователя"/>
+        <h1>@string.Concat("@",Model.UserName)</h1>
+        <span>Информация обо мне</span>
+    </div>
+    <div class="profile-articles">
+        <a class="" asp-area="" asp-controller="Blog" asp-action="WriteArticleView">Создать статью</a>
 
-<h2>Профиль</h2>
-<div>
-    <span>@Model.UserName</span>
-    @foreach (var i in Model.Articles)
-    {
-        <span>@i.Title</span>
-    }
+        <h2>Мои статьи</h2>
+        @foreach (var i in Model.Articles)
+        {
+            <div class="article">
+                <h3>@i.Title</h3>
+                <span>@i.Text</span>
+            </div>
+        }
+    </div>
 </div>
 
-<div>
-    <a class="" asp-area="" asp-controller="Blog" asp-action="WriteArticleView">Создать статью</a>
-</div>
