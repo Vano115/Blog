@@ -5,12 +5,23 @@
     overflow-anchor: none;
     overflow-wrap: break-word;
     text-align:center;
+    align-items: stretch;
     min-height: 100%;
+
 
 }
 
+.main{
+    padding-bottom: 90px;
+}
+
+.wrapper{
+    position: relative;
+    min-height: 100%;
+}
+
 .home-page-body {
-    min-height: 600px;
+    min-height: 100%;
     font-family: Open Sans;
     font-size: 14px;
     letter-spacing: -0.02em;

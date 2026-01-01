@@ -10,7 +10,8 @@
     cursor: pointer;
     vertical-align: top;
     box-sizing: border-box;
-    min-height: 150%;
+    min-height: 100%;
+    padding-bottom: 90px;
 }
 
 .profile-title{
