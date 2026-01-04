@@ -29,7 +29,14 @@
             {
                 <a class="text-button-menu" asp-area="" asp-controller="User" asp-action="MyProfile">Профиль</a>
 
-                ;
+                <form asp-area="" asp-controller="AccountManager" asp-action="UserList" method="get">
+                    <i class="fa fa-search"></i>
+                    <input type="text" placeholder="Поиск" name="search">
+                    <button type="submit" class="button-find">
+                        Найти
+                    </button>
+                </form>
+
                 @using (Html.BeginForm("Logout", "AccountManager", FormMethod.Post))
                 {
                     @Html.AntiForgeryToken()

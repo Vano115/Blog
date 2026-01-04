@@ -6,7 +6,7 @@
     overflow-wrap: break-word;
     text-align:center;
     align-items: stretch;
-    min-height: 100%;
+    min-height: 100vh;
 
 
 }
@@ -17,7 +17,7 @@
 
 .wrapper{
     position: relative;
-    min-height: 100%;
+    min-height: 100vh;
 }
 
 .home-page-body {

@@ -14,5 +14,7 @@ namespace Blog.Data.Models.BlogModels
         public List<Tag> Tags { get; set; } = new List<Tag>();
 
         public List<Comment> Comments { get; set; } = new List<Comment>();
+
+        public required User Owner { get; set; }
     }
 }

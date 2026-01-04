@@ -60,6 +60,8 @@ namespace Blog.Controllers
                 {
                     _logger.LogError(ex.Message);
                 }
+
+                return RedirectToAction("MyProfile", "User");
             }
 
             return View("WriteArticleView", model);
@@ -102,6 +104,7 @@ namespace Blog.Controllers
                     Text = article.Text,
                     Tags = article.Tags,
                     Comments = article.Comments,
+                    Owner = article.Owner,
                 };
 
                 return View(result);
