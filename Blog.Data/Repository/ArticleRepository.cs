@@ -25,7 +25,7 @@ namespace Blog.Data.Repository
 
         public async Task<List<Article>> GetArticlesByTitle(string title)
         {
-            return await _context.Articles.Where(a => a.Title == title).ToListAsync();
+            return await _context.Articles.Where(a => a.Title.ToUpper().Contains(title.ToUpper())).ToListAsync();
         }
 
         public async Task<List<Article>> GetArticlesByTag(Tag tag)

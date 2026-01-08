@@ -1,0 +1,28 @@
+﻿@model Blog.Data.Models.UserModels.UserEditViewModel
+
+@{
+    ViewData["Title"] = "User";
+}
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Редактирование профиля</title>
+</head>
+    <div class="">
+        <div class="profile-photo">
+            <img src="@(Model.ProfileImage ?? "https://via.placeholder.com/180")" alt="Фото пользователя" />
+        </div>
+        <div class="profile-info">
+
+            <form class="main" method="post" asp-controller="User" asp-action="Edit">
+                <div asp-validation-summary="ModelOnly"></div>
+                <div>
+                    <span>Здесь можно вставить строки для редактирования профиля, 
+                        т.к. строк в профиле у меня мало - реализую только смену фото профиля</span>
+                </div>
+                <div>
+                    <button type="submit">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>

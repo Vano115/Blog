@@ -7,6 +7,7 @@
         <img class="circular-image" src="@(Model.ProfileImage ?? "https://via.placeholder.com/180")" alt="Фото пользователя"/>
         <h1>@string.Concat("@",Model.UserName)</h1>
         <span>Информация обо мне</span>
+        <a asp-area="" asp-controller="User" asp-action="EditPage">Редактировать профиль</a>
     </div>
     <div class="profile-articles">
         <a class="" asp-area="" asp-controller="Blog" asp-action="WriteArticleView">Создать статью</a>

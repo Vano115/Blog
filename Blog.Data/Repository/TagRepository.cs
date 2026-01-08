@@ -20,7 +20,7 @@ namespace Blog.Data.Repository
 
         public async Task<Tag> FindByNameAsync (string name)
         {
-            var result = await _context.Tags.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
+            var result = await _context.Tags.FirstOrDefaultAsync(x => x.Name.ToLower().Contains(name.ToLower()));
 
             return result;
         }

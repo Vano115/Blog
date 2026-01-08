@@ -2,6 +2,7 @@
 using Blog.Data.Repository;
 using Blog.Data.UoW;
 using Blog.Service.Tasks.Blog;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

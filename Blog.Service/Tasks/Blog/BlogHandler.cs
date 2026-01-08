@@ -1,10 +1,13 @@
 ﻿using Blog.Data.DbSettings;
 using Blog.Data.Entityes;
 using Blog.Data.Models.BlogModels;
+using Blog.Data.Models.UserModels;
 using Blog.Data.Repository;
 using Blog.Data.UoW;
+using Blog.Models.UserModels;
 using Blog.Service.Checkers;
 using Blog.Service.Exceptions.AccountManager;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,17 +16,19 @@ using System.Text;
 
 namespace Blog.Service.Tasks.Blog
 {
-    public class ArticleHandler
+    public class BlogHandler
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ILogger<ArticleHandler> _logger;
+        private readonly ILogger<BlogHandler> _logger;
         private readonly ILoggerFactory _loggerFactory;
+        private readonly UserManager<User> _userManager;
 
-        public ArticleHandler(IUnitOfWork unitOfWirk, ILoggerFactory loggerFactory)
+        public BlogHandler(IUnitOfWork unitOfWirk, ILoggerFactory loggerFactory, UserManager<User> userManager)
         {
-            _logger = loggerFactory.CreateLogger<ArticleHandler>();
+            _logger = loggerFactory.CreateLogger<BlogHandler>();
             _loggerFactory = loggerFactory;
             _unitOfWork = unitOfWirk;
+            _userManager = userManager;
         }
 
         public async Task<bool> CreateArticle (User owner, ArticleViewModel model)
@@ -75,14 +80,34 @@ namespace Blog.Service.Tasks.Blog
 
             result = await articleRepository.GetArticlesByTitle(input);
 
-            if (tag.Name != "default")
+            if (tag != null)
             {
-                result.AddRange(await articleRepository.GetArticlesByTag(tag));
+                var articlesByTag = await articleRepository.GetArticlesByTag(tag);
+                result = result.Union(articlesByTag).ToList();
             }
 
-            _logger.LogInformation($"Результат создания статьи {result}");
+            _logger.LogInformation($"Результат поиска статьи {result}");
 
             return result;
+        }
+
+        public async Task<List<ViewUserModel>> GetUsers(string input)
+        {
+
+            List<ViewUserModel> users = new List<ViewUserModel>();
+
+            var find = _userManager.Users.AsEnumerable().Where(x => x.UserName.ToLower().Contains(input.ToLower())).ToList();
+
+            if (find.Count > 0)
+            {
+
+                foreach (var user in find)
+                {
+                    ViewUserModel model = new ViewUserModel();
+                    users.Add(UserConverter.ConvertToModel(model, user));
+                }
+            }
+            return users;
         }
 
         public async Task<Article> GetArticleById(int input)
@@ -95,6 +120,45 @@ namespace Blog.Service.Tasks.Blog
                 throw new ArticleNotFoundException("Программа не нашла статью по id");
 
             return result;
+        }
+
+        /// <summary>
+        /// Метод создания комментария
+        /// </summary>
+        /// <param name="articleId">Id комментируемой статьи</param>
+        /// <param name="text">Текст комментария</param>
+        /// <param name="owner">Пользователь написавший комментарий</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="ArticleNotFoundException"></exception>
+        public async Task<bool> CreateComment(int articleId,  string text, User owner)
+        {
+            var articleRepository = _unitOfWork.GetRepository<Article>() as ArticleRepository ??
+                throw new InvalidOperationException("Программа не получила нужный репозиторий статей");
+
+            var article = await articleRepository.GetAsync(articleId) ??
+                throw new ArticleNotFoundException("Программа не нашла статью по id");
+
+            Comment comment = new Comment()
+            {
+                Article = article,
+                Text = text,
+                User = owner,
+                PublicDate = DateTime.UtcNow,
+                Likes = 0
+            };
+
+            var commentRepository = _unitOfWork.GetRepository<Comment>() as CommentRepository ??
+                throw new InvalidOperationException("Программа не получила нужный репозиторий комментариев");
+
+            var result = await commentRepository.CreateAsync(comment);
+
+            if (result != 0)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

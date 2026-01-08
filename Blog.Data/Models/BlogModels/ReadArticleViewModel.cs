@@ -7,6 +7,7 @@ namespace Blog.Data.Models.BlogModels
 {
     public class ReadArticleViewModel
     {
+        public required int Id { get; set; }
         public required string Title { get; set; }
 
         public required string Text { get; set; }

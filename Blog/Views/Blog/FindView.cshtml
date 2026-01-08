@@ -1,0 +1,39 @@
+﻿@model Blog.Data.Models.BlogModels.FindViewModel
+
+@{
+    ViewData["Title"] = "Find";
+}
+
+<div>
+
+    @if (Model.Users.Count > 0)
+    {
+        <h3>Пользователи</h3>
+        @foreach (var user in @Model.Users)
+        {
+            <div>
+                <label>@user.UserName</label>
+            </div>
+        }
+    }
+
+    @if (Model.Articles.Count > 0)
+    {
+        <h3>Статьи</h3>
+        @foreach (var article in @Model.Articles)
+        {
+            <div>
+                <label>@article.Title</label>
+            </div>
+        }
+    }
+
+    else
+    {
+        <div>
+            <label> Поиск не дал результатов.</label>
+        </div>
+    }
+
+
+</div>
