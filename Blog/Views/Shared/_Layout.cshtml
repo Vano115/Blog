@@ -29,13 +29,6 @@
             {
                 <a class="text-button-menu" asp-area="" asp-controller="User" asp-action="MyProfile">Профиль</a>
 
-                <form asp-controller="Blog" asp-action="Finder" method="get">
-                    <p>
-                        <label>Title: <input type="text" name="searchString" /></label>
-                        <input type="submit" value="Filter" />
-                    </p>
-                </form>
-
                 @using (Html.BeginForm("Finder", "Blog", FormMethod.Get))
                 {
                     <input type="text" placeholder="Поиск" name="SearchString">
