@@ -40,11 +40,11 @@ namespace Blog.Controllers
         /// </summary>
         /// <returns> Страница пользователя с фото и заполнеными данными из UserViewModel</returns>
 
-        [HttpGet]
         [Route("MyProfile")]
+        [Authorize]
         public async Task<IActionResult> MyProfile()
         {
-            var handler = new UserHandler(_unitOfWork, _loggerFactory) { };
+            var handler = new UserHandler(_unitOfWork, _loggerFactory, _userManager) { };
 
             var result = await _userManager.GetUserAsync(User) ??
                 throw new InvalidOperationException("Пользователь не найден или не авторизован");
@@ -148,6 +148,35 @@ namespace Blog.Controllers
             {
                 ModelState.AddModelError("", "Некорректные данные");
                 return View("User/UserEditForm", model);
+            }
+        }
+
+        /// <summary>
+        /// Удаление пользователя и всех связаных с ним сущностей
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [Route("DeleteMe")]
+        [HttpDelete("DeleteMe")]
+        public async Task<IActionResult> DeleteMe()
+        {
+            try
+            {
+                User user = await _userManager.GetUserAsync(User) ??
+                throw new InvalidOperationException("Пользователь не найден или не авторизован при попытке удалить пользователя");
+
+                var handler = new UserHandler(_unitOfWork, _loggerFactory, _userManager);
+
+                await _signInManager.SignOutAsync();
+                _logger.LogInformation("Завершение пользовательской сессии при удалении");
+
+                await handler.DeleteUser(user);
+
+                return RedirectToAction("Index", "Home");
+            }
+            catch
+            {
+                return View("Error");
             }
         }
     }   

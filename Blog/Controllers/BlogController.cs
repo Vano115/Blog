@@ -96,13 +96,13 @@ namespace Blog.Controllers
                 return View("FindView", result);
             }
 
-            return View("Blog/FindView", result);
+            return View("FindView", result);
         }
 
-        [Route("ReadArticle/{id}")]
-        [HttpGet]
+        [HttpGet("ReadArticle/{id}")]
+        [Route("ReadArticle")]
         [Authorize]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> ReadArticle(int id)
         {
             try
@@ -121,7 +121,7 @@ namespace Blog.Controllers
                     Owner = article.Owner,
                 };
 
-                return View("ReadArticle", result);
+                return View("ReadArticleView", result);
             }
             catch
             {
@@ -130,7 +130,7 @@ namespace Blog.Controllers
         }
 
         [Route("AddComment")]
-        [HttpPost]
+        [HttpPut]
         [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddComment(string text, int articleId)
@@ -145,6 +145,44 @@ namespace Blog.Controllers
                 await handler.CreateComment(articleId, text, commentOwner);
 
                 return StatusCode(200);
+            }
+            catch
+            {
+                return RedirectToAction("Home", "Error");
+            }
+        }
+
+        [Route("News")]
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> News(NewsViewModel model)
+        {
+            try
+            {
+                var handler = new BlogHandler(_unitOfWork, _loggerFactory, _userManager) { };
+
+                model.articles = await handler.GetNews();
+
+                return View("NewsView", model);
+            }
+            catch
+            {
+                return RedirectToAction("Home", "Error");
+            }
+        }
+
+        [HttpDelete("DeleteArticle/{id}")]
+        [Route("DeleteArticle")]
+        [Authorize]
+        public async Task<IActionResult> DeleteArticle(int id)
+        {
+            try
+            {
+                var handler = new BlogHandler(_unitOfWork, _loggerFactory, _userManager) { };
+
+                await handler.DeleteArticle(id);
+
+                return Ok();
             }
             catch
             {

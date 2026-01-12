@@ -8,6 +8,7 @@
         <h1>@string.Concat("@",Model.UserName)</h1>
         <span>Информация обо мне</span>
         <a asp-area="" asp-controller="User" asp-action="EditPage">Редактировать профиль</a>
+        <a asp-controller="User" asp-action="DeleteMe">Удалить пользователя</a>
     </div>
     <div class="profile-articles">
         <a class="" asp-area="" asp-controller="Blog" asp-action="WriteArticleView">Создать статью</a>
@@ -18,6 +19,20 @@
             <div class="article">
                 <h3>@i.Title</h3>
                 <span>@i.Text</span>
+                <div>
+                    <span>Comments @i.Comments.Count</span>
+                    <span>Likes @i.Likes</span>
+
+                    @using (Html.BeginForm("ReadArticle", "Blog", FormMethod.Get))
+                    {
+                        <input type="hidden" asp-controller="Blog" asp-action="ReadArticle" name="id" value="@i.Id" />
+                        <button type="submit">Просмотр статьи</button>
+                    }
+
+
+
+                </div>
+                
             </div>
         }
     </div>

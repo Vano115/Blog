@@ -17,7 +17,7 @@
         }
     }
 
-    @if (Model.Articles.Count > 0)
+    else if (Model.Articles.Count > 0)
     {
         <h3>Статьи</h3>
         @foreach (var article in @Model.Articles)

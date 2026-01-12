@@ -1,0 +1,22 @@
+﻿@model Blog.Data.Models.BlogModels.NewsViewModel
+@{
+    ViewData["Title"] = "Новости";
+}
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.10/jquery.validate.unobtrusive.min.js"></script>
+
+<div>
+    <h2>Новости</h2>
+    @foreach(var i in Model.articles.OrderBy(prop => prop.PublicDate))
+    {
+        <div>
+            <h4>@i.Title</h4>
+            <span>@i.Text</span>
+            <ul>
+                <li>@i.Likes</li>
+                <li>@i.Comments.Count</li>
+                <li>@i.Likes</li>
+            </ul>
+        </div>
+    }
+</div>

@@ -14,11 +14,13 @@ namespace Blog.Service.Tasks.UserTask
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<UserHandler> _logger;
+        private readonly UserManager<User> _userManager;
 
-        public UserHandler(IUnitOfWork unitOfWirk, ILoggerFactory loggerFactory)
+        public UserHandler(IUnitOfWork unitOfWirk, ILoggerFactory loggerFactory, UserManager<User> userManager)
         {
             _logger = loggerFactory.CreateLogger<UserHandler>();
             _unitOfWork = unitOfWirk;
+            _userManager = userManager;
         }
 
         public async Task<List<Article>> GetUserArticles(User user)
@@ -30,6 +32,20 @@ namespace Blog.Service.Tasks.UserTask
             List<Article> result = await articleRepository.GetUserArticles(user);
 
             return result;
+        }
+
+        public async Task<bool> DeleteUser(User user)
+        {
+            // С помощью паттерна UnitOfWork получаем репозитории
+            // для статей
+            var articleRepository = _unitOfWork.GetRepository<Article>() as ArticleRepository ??
+                throw new InvalidOperationException("Программа не получила репозиторий статей");
+
+            await articleRepository.DeleteUserArticles(user);
+
+            await _userManager.DeleteAsync(user);
+
+            return true;
         }
     }
 }

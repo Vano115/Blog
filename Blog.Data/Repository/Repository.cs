@@ -47,7 +47,7 @@ namespace Blog.Data.Repository
             return await Set.FindAsync(id);
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task <IEnumerable<T>> GetAll()
         {
             return Set;
         }

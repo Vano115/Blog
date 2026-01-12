@@ -91,6 +91,11 @@ namespace Blog.Service.Tasks.Blog
             return result;
         }
 
+        /// <summary>
+        /// Поиск пользователя по заданому имени
+        /// </summary>
+        /// <param name="input">Искомое имя</param>
+        /// <returns></returns>
         public async Task<List<ViewUserModel>> GetUsers(string input)
         {
 
@@ -159,6 +164,37 @@ namespace Blog.Service.Tasks.Blog
             }
 
             return false;
+        }
+
+        public async Task<List<Article>> GetNews()
+        {
+            List<Article> result = new List<Article>();
+
+            // С помощью паттерна UnitOfWork получаем репозиторий для работы со статьёй в БД
+            var articleRepository = _unitOfWork.GetRepository<Article>() as ArticleRepository ??
+                throw new InvalidOperationException("Программа не получила репозиторий статей");
+
+            result = await articleRepository.GetAll();
+
+            return result;
+        }
+
+        public async Task<bool> DeleteArticle(int id)
+        {
+            // С помощью паттерна UnitOfWork получаем репозиторий для работы со статьёй в БД
+            var articleRepository = _unitOfWork.GetRepository<Article>() as ArticleRepository ??
+                throw new InvalidOperationException("Программа не получила репозиторий статей");
+
+            var commentRepository = _unitOfWork.GetRepository<Comment>() as CommentRepository ??
+                throw new InvalidOperationException("Программа не получила репозиторий комментариев");
+
+            var article = await articleRepository.GetArticleById(id);
+
+            await commentRepository.DeleteArticlesComments(article);
+
+            await articleRepository.DeleteAsync(article);
+
+            return true;
         }
     }
 }
